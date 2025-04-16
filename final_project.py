@@ -102,12 +102,14 @@ def make_fig_1(df):
         ax.set_ylim(0, None)
 
     axes[0].legend(title="Super Bowl Winners", loc="best")
-    plt.suptitle("Passing Stats Compared to Win Percentage", fontsize=16, y=0.95)
+    plt.tight_layout(pad=2.0)
+    plt.subplots_adjust(top=0.85)
+    plt.suptitle("Passing Stats to Win Percentage Linear Model", fontsize=16, y=0.95)
 
 
 def make_fig_2(df):
     metrics = ["Pass.Yds", "Pass.TD", "Opp.Pass.Yds", "Opp.Pass.TD"]
-    titles = ["Rush Yards vs W-L%", "Rush TDs (transformed) vs W-L%", "Opponent Rush Yards vs W-L%", "Opponent Rush TDs vs W-L%"]
+    titles = ["Pass Yards vs W-L%", "Pass TDs (transformed) vs W-L%", "Opponent Pass Yards vs W-L%", "Opponent Pass TDs vs W-L%"]
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     axes = axes.flatten()
@@ -122,7 +124,7 @@ def make_fig_2(df):
         false_neg = reg_df[(reg_df['Won'] == 1) & (reg_df['probs'] < 0.5)]
         correct_neg = reg_df[(reg_df['Won'] == 0) & (reg_df['probs'] < 0.5)]
 
-        ax.scatter(reg_df[metric], reg_df["probs"], color="blue", label="False Positives", s=30, alpha=0.7)
+        ax.scatter(reg_df[metric], reg_df["probs"], color="cyan", label="False Positives", s=30, alpha=0.7)
         ax.scatter(correct_pos[metric], correct_pos["probs"], color="green", label="True Positives", s=30, alpha=0.7)
         ax.scatter(false_neg[metric], false_neg["probs"], color="red", label="False Negatives", s=30, alpha=0.7)
         ax.scatter(correct_neg[metric], correct_neg["probs"], color="orange", label="True Negatives", s=30, alpha=0.7)
@@ -133,7 +135,9 @@ def make_fig_2(df):
         ax.set_ylim(0, None)
 
     axes[0].legend(title="Super Bowl Winners", loc="best")
-    plt.suptitle("Rushing Stats Compared to Super Bowl Winners", fontsize=16, y=0.95)
+    plt.tight_layout(pad=2.0)
+    plt.subplots_adjust(top=0.85)
+    plt.suptitle("Passing Stats to Super Bowl Logistic Model", fontsize=16, y=0.95)
 
 
 def make_fig_3(winners):
@@ -144,7 +148,7 @@ def make_fig_3(winners):
               'BAL': '#241773', 'DEN': '#FB4F14', 'OAK': '#A5ACAF', 'GNB': '#FFB612', 'IND': '#002C5F', 'NOR': '#D3BC8D', 
               'SEA': '#69BE28', 'LAR': '#003594', 'MIA': '#008E97', 'TAM': '#D50A0A', 'PHI': '#004C54', 'CHI': '#C83803', 'STL': '#003594'}
 
-    bar_colors = [colors.get(team, '#808080') for team in counts.index]
+    bar_colors = [colors.get(team, '#000000') for team in counts.index]
 
     plt.figure(figsize=(10, 6))
     plt.bar(counts.index, counts, color=bar_colors)
