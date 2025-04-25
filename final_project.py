@@ -1,3 +1,13 @@
+'''
+
+Randall Candaso
+ISTA 331
+Final Project
+
+The program takes data from previous NFL seasons since 1970 and creates three visual figures to represent
+different statistical comparisons.
+
+'''
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
@@ -10,6 +20,7 @@ import numpy as np
 def main():
     teams = pd.read_csv('Team Stats.csv', index_col=0)
     winners = pd.read_csv('SB Winners.csv')
+    print(type(winners))
     new = preprocessing(teams, winners)
     make_fig_1(new)
     make_fig_2(new)
@@ -18,6 +29,17 @@ def main():
 
 
 def preprocessing(teams, winners):
+    '''
+    
+    teams: team statistic dataset (pd.DataFrame)
+    winners: sb winners dataset (pd.DataFrame)
+
+    Using the 'winners' dataset, a 'Winner' column is added to the 'teams' dataset. Necessary columns are log transformed
+    for later proper model prediction.
+
+    return: preprocessed dataframe (pd.DataFrame)
+    
+    '''
     teams['Won'] = 0
 
     for i in winners.index:
@@ -32,6 +54,16 @@ def preprocessing(teams, winners):
 
 
 def log_reg_create(df):
+    '''
+    
+    df: dataframe to be modeled (pd.DataFrame)
+
+    Using the provided dataframe, a logistic model is created and fitted to the passing data. A new dataframe
+    is returned with the model's predicted probabilities. 
+
+    return: dataframe with probabilities (pd.DataFrame)
+    
+    '''
     feature_columns = ['Season', 'Team', "Pass.Yds", "Pass.TD", "Opp.Pass.Yds", "Opp.Pass.TD"]
 
     X = df[feature_columns].copy()
@@ -57,11 +89,13 @@ def log_reg_create(df):
 def get_ols_parameters(x, y):
     """
 
-    :param x: independent variable
-    :param y: independent variable
+    x: independent variable
+    y: independent variable
 
     This function calculates a OLS model and returns the slope, intercept, r^2, and p_val
     values from the model.
+
+    return: OLS parameters and statistics (list)
 
     """
     const = sm.add_constant(x)
@@ -75,6 +109,14 @@ def get_ols_parameters(x, y):
 
 
 def make_fig_1(df):
+    '''
+    
+    df: dataframe to be modeled (pd.DataFrame)
+
+    A visual is created to represent the relationship of passing data to win percentage. Additionally, a linear model is fitted 
+    to the data and plotted.
+    
+    '''
     metrics = ["Pass.Yds", "Pass.TD", "Opp.Pass.Yds", "Opp.Pass.TD"]
     titles = ["Pass Yards vs W-L%", "Pass TDs (transformed) vs W-L%", "Opponent Pass Yards vs W-L%", "Opponent Pass TDs vs W-L%"]
 
@@ -108,6 +150,14 @@ def make_fig_1(df):
 
 
 def make_fig_2(df):
+    '''
+    
+    df: dataframe to be modeled (pd.DataFrame)
+
+    Using the passing data in the dataframe, a logistic model is fitted to the data and the probabilities it calculates is 
+    plotted in a visual. The visual is color coded to identify the accuracy of the model.
+    
+    '''
     metrics = ["Pass.Yds", "Pass.TD", "Opp.Pass.Yds", "Opp.Pass.TD"]
     titles = ["Pass Yards vs W-L%", "Pass TDs (transformed) vs W-L%", "Opponent Pass Yards vs W-L%", "Opponent Pass TDs vs W-L%"]
 
@@ -141,6 +191,14 @@ def make_fig_2(df):
 
 
 def make_fig_3(winners):
+    '''
+    
+    winners: sb winners dataset (pd.DataFrame)
+
+    The frequency of each team that has won a Super Bowl since 1970 is plotted on a barchart. The barchart is color coded specific to each 
+    team.
+    
+    '''
     winners['Winner'] = winners['Winner'].replace('STL', 'LAR')
     counts = winners['Winner'].value_counts()
 
@@ -154,7 +212,7 @@ def make_fig_3(winners):
     plt.bar(counts.index, counts, color=bar_colors)
     plt.ylabel('# of SB\'s', fontsize=16)
     plt.xlabel('Team', fontsize=16)
-    plt.title('Teams with Super Bowls', fontsize=20)
+    plt.title('Teams with Super Bowls since 1970', fontsize=20)
 
 
 main()
