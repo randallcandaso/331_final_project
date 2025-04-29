@@ -90,7 +90,7 @@ def get_ols_parameters(x, y):
     """
 
     x: independent variable
-    y: independent variable
+    y: dependent variable
 
     This function calculates a OLS model and returns the slope, intercept, r^2, and p_val
     values from the model.
